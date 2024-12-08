@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "jsx": "react-jsx", // Usa "react" si estás en una versión anterior a React 17
+    "allowJs": true,    // Permite importar archivos .js y .jsx
+    "strict": true,
+    "esModuleInterop": true, // Recomendado para compatibilidad con ES modules
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"], // Incluir todos los archivos en src
+  "exclude": ["node_modules"] // Excluir node_modules
+}
