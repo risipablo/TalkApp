@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faMicrophone, faStop, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 import "./talk.css";
@@ -37,7 +37,6 @@ function TalkChat({ colors }) {
       if (event.results[event.results.length - 1].isFinal) {
         console.log("Transcripción finalizada:", transcript);
         setTranscription(transcript); // Guardar la transcripción final
-        // addNotes(transcript); // Agregar automáticamente la nota
       }
 
       // Cambiar color de fondo si coincide con algún color
@@ -70,6 +69,9 @@ function TalkChat({ colors }) {
           setIsNotes([...isNotes, newNote]);
           setNotes(""); // Limpiar campo de texto
           setTranscription(""); // Limpiar transcripción
+
+          // Leer en voz alta la nota agregada
+          speakText(`Nota agregada: ${newNote.notes}`);
         })
         .catch((err) => console.log(err));
     }
@@ -82,6 +84,19 @@ function TalkChat({ colors }) {
 
   const detener = () => {
     recognition.current.stop();
+  };
+
+  // Función para leer texto en voz alta
+  const speakText = (text) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "es-ES"; // Idioma: Español
+      utterance.pitch = 1; // Tono
+      utterance.rate = 1; // Velocidad
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.log("Text-to-Speech no es compatible en este navegador.");
+    }
   };
 
   return (
@@ -97,7 +112,7 @@ function TalkChat({ colors }) {
           onChange={(event) => setNotes(event.target.value)}
           className="transcription-input"
         />
-        <button  onClick={() => addNotes()} className="add-note-button">
+        <button onClick={() => addNotes()} className="add-note-button">
           Agregar Nota
         </button>
         {loading && (
@@ -117,6 +132,7 @@ function TalkChat({ colors }) {
         <button onClick={detener} className="icon-button">
           <FontAwesomeIcon icon={faStop} />
         </button>
+
       </div>
       <div className="notes-container">
         <h3>Tus Notas:</h3>
@@ -124,6 +140,12 @@ function TalkChat({ colors }) {
           {isNotes.map((note, index) => (
             <li key={index} className="note-item">
               {note.notes}
+              <button
+                onClick={() => speakText(note.notes)}
+                className="read-note-button"
+              >
+                Leer
+              </button>
             </li>
           ))}
         </ul>
