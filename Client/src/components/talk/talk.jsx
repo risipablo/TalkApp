@@ -8,6 +8,8 @@ import "./talk.css";
 const serverFront = "http://localhost:3001";
 // const serverFront = 'https://talkapp-e3bo.onrender.com'
 
+
+
 function TalkChat({ colors }) {
   const [transcription, setTranscription] = useState("");
   const recognition = useRef(null);
@@ -17,6 +19,9 @@ function TalkChat({ colors }) {
   // Notas
   const [isNotes, setIsNotes] = useState([]);
   const [notes, setNotes] = useState("");
+
+
+  
 
 
   useEffect(() => {
