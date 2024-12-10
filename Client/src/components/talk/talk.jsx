@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faStop, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import { faMicrophone, faStop,faTrash,faPlay} from "@fortawesome/free-solid-svg-icons";
 import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 import "./talk.css";
 
 const serverFront = "http://localhost:3001";
+// const serverFront = 'https://talkapp-e3bo.onrender.com'
 
 function TalkChat({ colors }) {
   const [transcription, setTranscription] = useState("");
@@ -16,6 +17,7 @@ function TalkChat({ colors }) {
   // Notas
   const [isNotes, setIsNotes] = useState([]);
   const [notes, setNotes] = useState("");
+
 
   useEffect(() => {
     recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -66,15 +68,35 @@ function TalkChat({ colors }) {
         .post(`${serverFront}/api/notes`, { notes: note })
         .then((response) => {
           const newNote = response.data;
-          setIsNotes([...isNotes, newNote]);
+          setIsNotes((prevNotes) => [...prevNotes, newNote]); // Agrega al final
           setNotes(""); // Limpiar campo de texto
           setTranscription(""); // Limpiar transcripción
-
+  
           // Leer en voz alta la nota agregada
           speakText(`Nota agregada: ${newNote.notes}`);
         })
         .catch((err) => console.log(err));
     }
+  };
+  
+
+  const deleteNotes = (id) => {
+    axios.delete(`${serverFront}/api/notes/` + id)
+    .then(response => {
+      setIsNotes(isNotes => isNotes.filter((note) => note._id !== id))
+      console.log("Note deleted successfully");
+    })
+    .catch(err => console.error("Error deleting note:", err))
+  }
+
+  const deleteAllNotes = () => {
+    axios
+        .delete(`${serverFront}/api/notes`)
+        .then(response => {
+            setIsNotes([]); // Vacía las notas en el estado
+            console.log(response.data.message);
+        })
+        .catch(err => console.error("Error deleting tasks:", err));
   };
 
   const iniciar = () => {
@@ -136,18 +158,24 @@ function TalkChat({ colors }) {
       </div>
       <div className="notes-container">
         <h3>Tus Notas:</h3>
+        <button onClick={deleteAllNotes}> Borrar todo </button>
         <ul>
-          {isNotes.map((note, index) => (
-            <li key={index} className="note-item">
-              {note.notes}
+        {isNotes.map((note) => (
+          <li key={note._id} className="note-item">
+            {note.notes}
+            <div className="note-buttons">
               <button
                 onClick={() => speakText(note.notes)}
                 className="read-note-button"
               >
-                Leer
+                <FontAwesomeIcon icon={faPlay} />
               </button>
-            </li>
-          ))}
+              <button onClick={() => deleteNotes(note._id)} className="delete-note-button">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          </li>
+        ))}
         </ul>
       </div>
     </div>

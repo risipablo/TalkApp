@@ -79,7 +79,7 @@
 
 .notes-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -106,18 +106,25 @@
   border-bottom: none;
 }
 
-.read-note-button {
+.note-buttons {
+  display: flex;
+  gap: 10px; /* Espaciado entre los botones */
+}
+
+.read-note-button, .delete-note-button {
   background-color: transparent;
   border: none;
   font-size: 18px;
-  color: #6200ea;
+  margin: 0 12px;
+  color: #030303;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
-.read-note-button:hover {
+.read-note-button:hover, .delete-note-button:hover {
   color: #4500b5;
 }
+
 
 /* Responsivo */
 @media (max-width: 768px) {
