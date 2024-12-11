@@ -5,8 +5,8 @@ import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 import "./talk.css";
 
-const serverFront = "http://localhost:3001";
-// const serverFront = 'https://talkapp-e3bo.onrender.com'
+// const serverFront = "http://localhost:3001";
+const serverFront = 'https://talkapp-e3bo.onrender.com'
 
 
 
