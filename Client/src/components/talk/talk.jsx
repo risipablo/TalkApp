@@ -5,8 +5,8 @@ import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 import "./talk.css";
 
-const serverFront = "http://localhost:3001";
-// const serverFront = 'https://talkapp-e3bo.onrender.com'
+// const serverFront = "http://localhost:3001";
+const serverFront = 'https://talkapp-e3bo.onrender.com'
 
 
 
@@ -22,7 +22,12 @@ function TalkChat({ colors }) {
 
 
   
-
+  useEffect(() => {
+    if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
+      alert("La función de reconocimiento de voz no es compatible con tu navegador.");
+    }
+  }, []);
+  
 
   useEffect(() => {
     recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
