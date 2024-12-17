@@ -21,12 +21,21 @@ function TalkChat({ colors }) {
   const [notes, setNotes] = useState("");
 
 
-  
   useEffect(() => {
-    if (!("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
-      alert("La función de reconocimiento de voz no es compatible con tu navegador.");
+    const isCompatible = "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+    if (!isCompatible) {
+      alert("El reconocimiento de voz no está disponible en este dispositivo o navegador. Intenta usar Chrome en Android.");
+    } else {
+      console.log("El reconocimiento de voz está disponible.");
     }
   }, []);
+
+  const solicitarPermisoMicrofono = () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(() => console.log("Permiso del micrófono concedido."))
+      .catch(() => alert("Debes habilitar el micrófono para usar esta función."));
+  };
   
 
   useEffect(() => {
@@ -110,6 +119,7 @@ function TalkChat({ colors }) {
   };
 
   const iniciar = () => {
+    solicitarPermisoMicrofono();
     recognition.current.start();
     console.log("Reconocimiento iniciado");
   };

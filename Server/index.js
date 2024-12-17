@@ -18,8 +18,18 @@ app.use(cors(corsOptions));
 
 connectDB();
 
+
+app.use((req, res, next) => {
+    if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(`https://talk-app-eight.vercel.app${req.url}`);
+    }
+    next();
+});
+
 app.use('/api', notesRoutes);
 
 app.listen(3001, () => {
     console.log('Servidor funcionando correctamente');
 });
+
+
