@@ -39,7 +39,7 @@ function TalkChat({ colors }) {
   
 
   useEffect(() => {
-    recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
     recognition.current.lang = "es-ES";
 
     recognition.current.onstart = () => {
