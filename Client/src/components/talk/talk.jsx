@@ -72,33 +72,7 @@ function TalkChat({ colors }) {
     };
   }, [colors]);
 
-  useEffect(() => {
-    axios
-      .get(`${serverFront}/api/notes`)
-      .then((response) => {
-        setIsNotes(response.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const addNotes = (note = notes) => {
-    if (note.trim() !== "") {
-      axios
-        .post(`${serverFront}/api/notes`, { notes: note })
-        .then((response) => {
-          const newNote = response.data;
-          setIsNotes((prevNotes) => [...prevNotes, newNote]); // Agrega al final
-          setNotes(""); // Limpiar campo de texto
-          setTranscription(""); // Limpiar transcripción
   
-          // Leer en voz alta la nota agregada
-          speakText(`Nota agregada: ${newNote.notes}`);
-        })
-        .catch((err) => console.log(err));
-    }
-  };
-  
-
   const deleteNotes = (id) => {
     axios.delete(`${serverFront}/api/notes/` + id)
     .then(response => {
